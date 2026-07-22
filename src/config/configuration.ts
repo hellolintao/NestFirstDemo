@@ -1,0 +1,73 @@
+import { z } from 'zod';
+
+export const DEFAULT_APP_PORT = 3001;
+export const DEFAULT_LOGGING_LEVEL = 'log';
+export const DEFAULT_CORS_ALLOWED_ORIGIN = '*';
+export const DEFAULT_JWT_SECRET = 'your-secret-key';
+export const DEFAULT_JWT_EXPIRES_IN = '1h';
+export const DEFAULT_DB_HOST = 'localhost';
+export const DEFAULT_DB_PORT = 5432;
+export const DEFAULT_DB_USER = 'nestuser';
+export const DEFAULT_DB_PASS = 'nestpassword';
+export const DEFAULT_DB_DATABASE = 'nestdb';
+export const DEFAULT_DB_LOGGING = false;
+
+const configSchema = z.object({
+  APP_VERSION: z.string().optional(),
+  APP_PORT: z.coerce.number().min(1).max(65535).default(DEFAULT_APP_PORT),
+  LOGGING_LEVEL: z.enum(['verbose', 'debug', 'log', 'warn', 'error', 'fatal']).default(DEFAULT_LOGGING_LEVEL),
+  CORS_ALLOWED_ORIGIN: z
+    .string()
+    .default(DEFAULT_CORS_ALLOWED_ORIGIN)
+    .transform((val) => {
+      // Handle comma-separated values by splitting and trimming
+      if (val === '*') return '*';
+      return val
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter((origin) => origin.length > 0);
+    }),
+  JWT_SECRET: z.string().min(1).default(DEFAULT_JWT_SECRET),
+  JWT_EXPIRES_IN: z.string().min(1).default(DEFAULT_JWT_EXPIRES_IN),
+  DB_HOST: z.string().default(DEFAULT_DB_HOST),
+  DB_PORT: z.coerce.number().min(1).max(65535).default(DEFAULT_DB_PORT),
+  DB_USER: z.string().default(DEFAULT_DB_USER),
+  DB_PASS: z.string().default(DEFAULT_DB_PASS),
+  DB_DATABASE: z.string().default(DEFAULT_DB_DATABASE),
+  DB_HOST_READ_ONLY: z.string().optional(),
+  DB_MIGRATIONS_RUN: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      if (val.toLowerCase() === 'false' || val === '0') return false;
+      if (val.toLowerCase() === 'true' || val === '1') return true;
+    }
+    return val;
+  }, z.boolean().default(true)),
+  DB_SSL: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      if (val.toLowerCase() === 'false' || val === '0') return false;
+      if (val.toLowerCase() === 'true' || val === '1') return true;
+    }
+    return val;
+  }, z.boolean().default(true)),
+  DB_LOGGING: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      if (val.toLowerCase() === 'false' || val === '0') return false;
+      if (val.toLowerCase() === 'true' || val === '1') return true;
+    }
+    return val;
+  }, z.boolean().default(DEFAULT_DB_LOGGING)),
+  SCHEDULE_TASK_CLEANUP_CRON: z.string().optional(),
+});
+
+export type Config = z.infer<typeof configSchema>;
+
+export const validate = (config: Record<string, unknown>): Config => {
+  const result = configSchema.safeParse(config);
+
+  if (!result.success) {
+    const message = result.error.issues.map((issue) => `${issue.path.join('.')} - ${issue.message}`).join(', ');
+    throw new Error(`Config validation error: ${message}`);
+  }
+
+  return result.data;
+};
