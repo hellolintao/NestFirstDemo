@@ -5,7 +5,7 @@ import { HealthController } from './health.controller';
 import { VersionHealthIndicator } from './indicators/version.health';
 
 @Module({
-  imports: [TerminusModule],
+  imports: [TerminusModule], // 专用的健康检查模块
   controllers: [HealthController],
   providers: [VersionHealthIndicator],
 })

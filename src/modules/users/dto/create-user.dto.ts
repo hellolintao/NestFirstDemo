@@ -1,3 +1,6 @@
+/**
+ * 创建用户的dto
+ */
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 /**

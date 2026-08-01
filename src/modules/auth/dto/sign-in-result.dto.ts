@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
+ * 登录结果
  * Data Transfer Object for authentication sign in result.
  */
 export class SignInResultDto {

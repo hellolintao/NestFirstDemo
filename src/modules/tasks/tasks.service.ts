@@ -13,13 +13,16 @@ export class TasksService {
   private readonly logger = new Logger(TasksService.name);
 
   constructor(
+    // 注入两个数据库实例
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
     @InjectRepository(Task, 'read-only')
     private readonly taskRepositoryReadOnly: Repository<Task>,
+    // 任务优先级服务
     private readonly taskPriorityService: TaskPriorityService,
   ) {}
 
+  // 查找任务
   async findAll(userId: string, page?: number, pageSize?: number): Promise<Task[] | Paginated<Task>> {
     this.logger.log(`> findAll: userId=${userId}, page=${page}, pageSize=${pageSize}`);
 
@@ -62,6 +65,7 @@ export class TasksService {
     return result;
   }
 
+  // 查找一个
   async findOne(id: string, userId: string): Promise<Task> {
     this.logger.log(`> findOne: ${id}, userId=${userId}`);
     const task = await this.taskRepositoryReadOnly.findOne({ where: { id, userId } });
@@ -75,6 +79,7 @@ export class TasksService {
     return task;
   }
 
+  // 创建任务
   async create(createTaskDto: CreateTaskDto, userId: string): Promise<Task> {
     this.logger.log(`> create: userId=${userId}`);
 
@@ -93,6 +98,7 @@ export class TasksService {
     return savedTask;
   }
 
+  // 更新任务
   async update(id: string, updateTaskDto: UpdateTaskDto, userId: string): Promise<Task> {
     this.logger.log(`> update: ${id}, userId=${userId}`);
     // Verify the task exists and belongs to the user before updating
@@ -129,6 +135,7 @@ export class TasksService {
     return updatedTask;
   }
 
+  // 移除
   async remove(id: string, userId: string): Promise<void> {
     this.logger.log(`> remove: ${id}, userId=${userId}`);
     const task = await this.findOne(id, userId);
@@ -137,6 +144,7 @@ export class TasksService {
     this.logger.log(`< remove: ${id}, userId=${userId}`);
   }
 
+  // 移除全部
   async removeAll(userId?: string): Promise<number> {
     this.logger.log(`> removeAll: userId=${userId || 'all'}`);
     let queryBuilder = this.taskRepository.createQueryBuilder().delete().from(Task);

@@ -10,18 +10,20 @@ import { SignInResultDto } from './dto/sign-in-result.dto';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
 
 /**
+ * 鉴权操作服务
  * Service for authentication operations.
  */
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersService, // 引入用户服务
     private readonly jwtService: JwtService,
   ) {}
 
   /**
+   * 验证用户证书
    * Verify user credentials.
-   * @param signInDto The sign in data transfer object.
+   * @param signInDto The sign in data transfer object. 登录数据转换成对象
    * @returns A Promise that resolves to User if credentials are valid, null otherwise.
    */
   async verifyCredentials(signInDto: SignInDto): Promise<User | null> {
@@ -44,6 +46,7 @@ export class AuthService {
   }
 
   /**
+   * 使用用户名和密码进行登录
    * Sign in a User with username and password.
    * @param signInDto The sign in data transfer object.
    * @returns A Promise that resolves to SignInResultDto containing the access token.
@@ -73,6 +76,7 @@ export class AuthService {
   }
 
   /**
+   * 根据密码的盐值和hash来验证密码
    * Verify a password against its salt and hash.
    * @param password The plain text password to verify.
    * @param salt The password salt.
@@ -85,6 +89,7 @@ export class AuthService {
   }
 
   /**
+   * 使用盐值hash一个密码
    * Hash a password with a salt.
    * @param password The plain text password to hash.
    * @param saltRounds The number of salt rounds to use (default: 10).
@@ -97,6 +102,7 @@ export class AuthService {
   }
 
   /**
+   * 注册一个新账户
    * Register a new user account.
    * @param registerDto The registration data transfer object.
    * @returns A Promise that resolves to the created User entity.

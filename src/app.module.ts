@@ -1,6 +1,7 @@
 /**
- * Main application module
- * Configures global modules, database connections, and imports feature modules.
+ * 程序的主模块，主要工作是导入其他各种各样的模块
+ * Main application module 主程序模块
+ * Configures global modules, database connections, and imports feature modules. 配置全局的模块、数据库连接、导入功能模块
  */
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -20,11 +21,14 @@ import { TypeOrmLoggerService } from './modules/core/typeorm-logger.service';
 
 @Module({
   imports: [
+    // 配置模块
     ConfigModule.forRoot({ isGlobal: true, validate }),
+    // 日志模块
     LoggerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
+      imports: [ConfigModule], // 导入配置模块
+      inject: [ConfigService], // 注入配置服务
       useFactory: (configService: ConfigService) => ({
+        // 利用工厂函数，得到模块实例
         pinoHttp: {
           level: configService.get<string>('LOGGING_LEVEL'),
           transport:
@@ -41,9 +45,13 @@ import { TypeOrmLoggerService } from './modules/core/typeorm-logger.service';
         },
       }),
     }),
+    // 缓存模块，默认五秒缓存一次
     CacheModule.register({ isGlobal: true, ttl: 5000 }), // Cache for 5 seconds by default
+    // 日程表模块
     ScheduleModule.forRoot(),
+    // 核心模块（自定义）
     CoreModule,
+    // 数据库模块
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, CoreModule],
       useFactory: (configService: ConfigService, typeOrmLogger: TypeOrmLoggerService) => ({
@@ -69,6 +77,7 @@ import { TypeOrmLoggerService } from './modules/core/typeorm-logger.service';
       }),
       inject: [ConfigService, TypeOrmLoggerService],
     }),
+    // 数据库模块（只读）
     TypeOrmModule.forRootAsync({
       name: 'read-only',
       imports: [ConfigModule, CoreModule],
@@ -96,10 +105,15 @@ import { TypeOrmLoggerService } from './modules/core/typeorm-logger.service';
       },
       inject: [ConfigService, TypeOrmLoggerService],
     }),
+    // 任务模块（自定义）
     TasksModule,
+    // 健康模块（自定义）
     HealthModule,
+    // 鉴权模块（自定义）
     AuthModule,
+    // 用户模块（自定义）
     UsersModule,
+    // 引用数据模块（自定义）
     ReferenceDataModule,
   ],
   controllers: [],

@@ -2,10 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 /**
+ * 注册
  * Data Transfer Object for user registration.
  */
 export class RegisterDto {
   /**
+   * 姓氏
    * The first name of the user.
    */
   @ApiProperty({
@@ -21,6 +23,7 @@ export class RegisterDto {
   firstName: string;
 
   /**
+   * 名字
    * The last name of the user.
    */
   @ApiProperty({
@@ -36,6 +39,7 @@ export class RegisterDto {
   lastName: string;
 
   /**
+   * 邮箱
    * The email address of the user.
    */
   @ApiProperty({
@@ -49,6 +53,7 @@ export class RegisterDto {
   email: string;
 
   /**
+   * 用户名
    * The account username.
    */
   @ApiProperty({
@@ -64,6 +69,7 @@ export class RegisterDto {
   username: string;
 
   /**
+   * 密码
    * The account password.
    */
   @ApiProperty({

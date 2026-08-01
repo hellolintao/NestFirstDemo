@@ -1,6 +1,11 @@
+/**
+ * 种子任务权限表
+ */
+
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class SeedTaskPriorityData1760869380977 implements MigrationInterface {
+  // 插入这个表五条数据
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
 INSERT INTO "task_priority" ("code", "label", "description", "ordinal") VALUES
@@ -12,6 +17,7 @@ INSERT INTO "task_priority" ("code", "label", "description", "ordinal") VALUES
 `);
   }
 
+  // 删除表中的五条数据
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
 DELETE FROM "task_priority" WHERE "code" IN (

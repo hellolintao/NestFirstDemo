@@ -13,12 +13,16 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 /**
+ * 基于JWT的鉴权功能
  * Authentication module that provides JWT-based authentication functionality.
  */
 @Module({
   imports: [
+    // 配置模块
     ConfigModule,
+    // 用户模块
     UsersModule,
+    // jwt模块
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -29,10 +33,13 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       }),
       inject: [ConfigService],
     }),
+    // 护照管理模块
     PassportModule,
   ],
   controllers: [AuthController],
   /** Providing APP_GUARD applies JWT authentication globally */
+  // 将JwtAuthGuard添加到全局
+  // 添加两个策略
   providers: [AuthService, LocalStrategy, JwtStrategy, { provide: APP_GUARD, useClass: JwtAuthGuard }],
   exports: [AuthService],
 })

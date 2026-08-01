@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 /**
+ * 代表了此系统中的任务优先级
  * Represents a task priority level in the system.
  *
  * Task priorities define the relative importance and urgency of tasks,

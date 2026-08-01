@@ -24,16 +24,19 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 
 /**
  * Controller for authentication endpoints.
+ * 鉴权接口的控制器
  */
 @ApiTags('Authentication')
-@UseInterceptors(ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor) // 拦截器
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
+  // 注入权限服务
   constructor(private readonly authService: AuthService) {}
 
   /**
+   * 使用用户名和密码登录
    * Sign in a user with username and password.
    * @param signInDto The sign in data transfer object.
    * @returns The JWT access token.
@@ -52,7 +55,7 @@ export class AuthController {
     description: 'Invalid credentials',
   })
   @Public()
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard) // 使用本地守卫，因为要从请求中提取用户名和密码，所以要使用这个守卫
   @HttpCode(HttpStatus.OK)
   @Post('signin')
   async signIn(@Body(new ValidationPipe({ transform: true })) signInDto: SignInDto): Promise<SignInResultDto> {
@@ -65,6 +68,7 @@ export class AuthController {
   }
 
   /**
+   * 注册新用户
    * Register a new user account.
    * @param registerDto The registration data transfer object.
    * @returns The created user entity.

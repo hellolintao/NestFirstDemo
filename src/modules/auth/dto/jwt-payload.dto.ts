@@ -6,6 +6,7 @@ import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
  */
 export class JwtPayloadDto {
   /**
+   * 用户名
    * The account username.
    */
   @ApiProperty({
@@ -21,6 +22,7 @@ export class JwtPayloadDto {
   username: string;
 
   /**
+   * 子身份标识
    * The subject identifier for the user (UUID).
    */
   @ApiProperty({
@@ -32,6 +34,7 @@ export class JwtPayloadDto {
   sub: string;
 
   /**
+   * 用户id
    * The unique identifier for the user.
    */
   @ApiProperty({

@@ -11,6 +11,7 @@ import { User } from './entities/user.entity';
  */
 @Injectable()
 export class UsersService {
+  // 注入两个数据库实例，第二个是只读的
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -58,7 +59,7 @@ export class UsersService {
    * @returns A Promise that resolves to the created User entity.
    */
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = new User();
+    const user = new User(); // 创建一个实体实例
     user.sub = uuidv4();
     user.firstName = createUserDto.firstName;
     user.lastName = createUserDto.lastName;

@@ -25,6 +25,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   /**
+   * 获得用户数据
    * Get the current user's profile.
    * @param userId - The user ID from the JWT token.
    * @returns The user profile.

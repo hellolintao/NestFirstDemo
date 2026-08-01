@@ -1,3 +1,6 @@
+/**
+ * 数据库配置测试文件
+ */
 import {
   validate,
   Config,
